@@ -41,3 +41,6 @@ $ mau deploy
 
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
+### Grant permissions to user to create schema
+ - GRANT USAGE ON SCHEMA public TO testuser1; // can access objects in the schema.
+ - GRANT CREATE ON SCHEMA public TO testuser1; // can create tables in the schema.
