@@ -14,3 +14,7 @@
     - -r tsconfig-paths/register: -r tells Node to preload a module before running your script. tsconfig-paths/register reads the "paths" mappings in your tsconfig.json and rewrites import paths at runtime.This is critical if you’re using aliases (e.g. @app/…) in your NestJS project so that both your code and the TypeORM CLI resolve imports the same way.
     - ./node_modules/typeorm/cli.js: This is the entry point for the TypeORM command-line interface. Instead of installing TypeORM globally, it is pointing directly at the locally-installed CLI.
     - -d src/ormdatasource.ts: The -d (or --dataSource) flag tells the TypeORM CLI which DataSource definition to use.In modern TypeORM (v0.3+), we define database connection, entities, migrations, etc., in a DataSource object (often in a file like src/ormdatasource.ts).
+
+### realworld documentations
+ - [intro](https://realworld-docs.netlify.app/specifications/backend/introduction/)
+ - 
