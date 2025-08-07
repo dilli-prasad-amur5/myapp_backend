@@ -47,6 +47,9 @@ export class UserService {
 
         return user
     }
+    async findUserById(userId:number){
+        return await this.userrepository.findOne({ where: { id: userId } });
+    }
 
     generatejwtToken(user:User){
         return sign({
@@ -58,7 +61,7 @@ export class UserService {
             },
             // process.env.JWT_SECRET,
             'secretpassword',
-            { expiresIn: '1h' }
+            { expiresIn: '7d' }
         );
     }
     createUserResponse(user:User): UserResponse{
