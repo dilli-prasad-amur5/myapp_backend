@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import {RegisteruserDto} from '@app/user/dto/user.dto'
+import {RegisteruserDto, LoginUserDto} from '@app/user/dto/user.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@app/user/user.entity';
 import { sign } from 'jsonwebtoken'
+import { compare } from 'bcrypt';
 
 import { UserResponse } from '@app/types/userresponse'
 @Injectable()
@@ -24,10 +25,27 @@ export class UserService {
         if (userByEmail || userByName) {
             throw new HttpException('Email or username already exists', HttpStatus.UNPROCESSABLE_ENTITY)
         }
-        
+
         const newuser = new User();
         Object.assign(newuser, data);
         return this.userrepository.save(newuser)
+    }
+
+    async loginUser(loginDto: LoginUserDto): Promise<User>{
+        const errorMessage = 'Invalid Login credentials'
+        const user = await this.userrepository.findOne(
+            {where: {email: loginDto.email},
+            select: ['id', 'email', 'username', 'password', 'image', 'bio']}
+        )
+        if (!user) {
+            throw new HttpException(errorMessage, HttpStatus.UNAUTHORIZED)
+        }
+        const isPasswordValid = compare(loginDto.password, user.password)
+        if (!isPasswordValid) {
+            throw new HttpException(errorMessage, HttpStatus.UNAUTHORIZED)
+        }
+
+        return user
     }
 
     generatejwtToken(user:User){

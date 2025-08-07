@@ -11,3 +11,12 @@ export class RegisteruserDto{
     readonly password:string
 
 }
+
+export class LoginUserDto {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
+
+    @IsNotEmpty()
+    password: string
+}
