@@ -1,9 +1,8 @@
 import { Body, Controller, Post, Get, UsePipes, ValidationPipe, Req } from '@nestjs/common';
 import { UserService } from '@app/user/user.service';
 import { RegisteruserDto, LoginUserDto} from '@app/user/dto/user.dto'
-import { User } from '@app/user/user.entity';
 import { UserResponse } from '@app/types/userresponse'
-import type { Request } from 'express';
+import { User } from '@app/decorators/user.decorator';
 @Controller()
 export class UserController {
     constructor(
@@ -25,9 +24,10 @@ export class UserController {
     }
 
     @Get('user')
-    async currentUser(@Req() request:any): Promise<UserResponse> {
+    async currentUser(@User() user:any): Promise<UserResponse> {
         // console.log(`User data: ${JSON.stringify(request.user)}`)
-        return this.userService.createUserResponse(request.user)
+        // console.log(`User data: ${JSON.stringify(user)}`)
+        return this.userService.createUserResponse(user)
     }
 
 }
