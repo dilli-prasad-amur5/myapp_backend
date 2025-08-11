@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import {RegisteruserDto, LoginUserDto} from '@app/user/dto/user.dto'
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {RegisteruserDto, LoginUserDto, UpdateUserDto} from '@app/user/dto/user.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@app/user/user.entity';
@@ -47,8 +47,19 @@ export class UserService {
 
         return user
     }
-    async findUserById(userId:number){
-        return await this.userrepository.findOne({ where: { id: userId } });
+    async findUserById(userId:number):Promise<User>{
+        const user = await this.userrepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
+        return user;
+    }
+
+    async updateUser(id: number, userDto: UpdateUserDto):Promise<User>{
+        const userdetails = await this.findUserById(id);
+        Object.assign(userdetails, userDto);
+        console.log("user data after update :", userdetails)
+        return await this.userrepository.save(userdetails);
     }
 
     generatejwtToken(user:User){
