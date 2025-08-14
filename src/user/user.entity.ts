@@ -28,5 +28,5 @@ export class User{
     image: string;
 
     @OneToMany(()=> Articles, (article) => article.author)
-    articles: Articles
+    articles: Articles[];
 }

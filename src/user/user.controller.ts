@@ -2,7 +2,7 @@ import { Body, Controller, Post, Get, UsePipes, ValidationPipe, Req, UseGuards, 
 import { UserService } from '@app/user/user.service';
 import { RegisteruserDto, LoginUserDto, UpdateUserDto} from '@app/user/dto/user.dto'
 import { UserResponse } from '@app/types/userresponse'
-import { User } from '@app/decorators/user.decorator';
+import { UserDecorator } from '@app/decorators/user.decorator';
 import { AuthGuard } from '@app/guards/auth.guards';
 @Controller()
 export class UserController {
@@ -26,13 +26,13 @@ export class UserController {
 
     @Get('user')
     @UseGuards(AuthGuard)
-    async currentUser(@User() user:any): Promise<UserResponse> {
+    async currentUser(@UserDecorator() user:any): Promise<UserResponse> {
         return this.userService.createUserResponse(user)
     }
 
     @Put('user')
     @UseGuards(AuthGuard)
-    async updateCurrentUser(@User('id') userID: number, @Body('user') updateUserDto: UpdateUserDto){
+    async updateCurrentUser(@UserDecorator('id') userID: number, @Body('user') updateUserDto: UpdateUserDto){
         const userData = await this.userService.updateUser(userID, updateUserDto)
         return this.userService.createUserResponse(userData)
     }

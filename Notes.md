@@ -18,3 +18,12 @@
 ### realworld documentations
  - [intro](https://realworld-docs.netlify.app/specifications/backend/introduction/)
  - 
+
+### postgres cli
+- connect to db "psql -U postgres" (psql -U username -d databasename)
+- \l: list all databases
+- \c <db_name>: connect to a database
+- \dt: list all tables in the database
+- \du: list all users
+- \d tag: describe tag table
+- \q: quit
