@@ -4,6 +4,7 @@ import { AppService } from '@app/app.service';
 import { TagModule } from '@app/tag/tag.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '@app/user/user.module';
+import { ArticleModule } from './article/article.module';
 import DataSourceOptions from "@app/ormconfig"
 
 @Module({
@@ -11,6 +12,7 @@ import DataSourceOptions from "@app/ormconfig"
     // Todo: move database confid data to new file
     TypeOrmModule.forRoot(DataSourceOptions),
     UserModule,
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
