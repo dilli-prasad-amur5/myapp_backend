@@ -11,6 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
   ){}
   async use(req: ExpressRequest, res: Response, next: NextFunction) {
     // console.log(`Request header data: ${JSON.stringify(req.headers)}`)
+    console.log('Middleware Running() =====>')
     if (!req.headers.authorization) {
       req.user = null;
       next();

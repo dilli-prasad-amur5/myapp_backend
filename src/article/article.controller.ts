@@ -1,8 +1,9 @@
-import { Body, Controller, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { UserDecorator } from '@app/decorators/user.decorator';
 import { User } from '@app/user/user.entity';
 import { CreateArticleDto } from './dto/article.dto';
+import { ArticleResponse } from '@app/types/articleresponse';
 @Controller()
 export class ArticleController {
     constructor(
@@ -12,8 +13,16 @@ export class ArticleController {
     @UseGuards()
     @UsePipes(ValidationPipe)
     @Post('articles')
-    async createArticles(@UserDecorator() user:User, @Body('article') createArticleDto: CreateArticleDto){
+    async createArticles(@UserDecorator() user:User, @Body('article') createArticleDto: CreateArticleDto): Promise<ArticleResponse>{
         console.log(`Userdata: ${JSON.stringify(user)}`)
-        return await this.articleService.createArticles(user, createArticleDto)
+        const article = await this.articleService.createArticles(user, createArticleDto)
+        return this.articleService.buildArticleResponse(article)
+    }
+
+    @Get('articles/:slug')
+    async getArticle(@Param('slug') slug:string):Promise<ArticleResponse>{
+        console.log('inside getArticle() ====>')
+        const article = await this.articleService.getArticleBySlug(slug)
+        return this.articleService.buildArticleResponse(article)
     }
 }
