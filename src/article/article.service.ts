@@ -62,4 +62,18 @@ export class ArticleService {
         return this.articleRepository.save(article)
 
     }
+
+    async deleteArticle(userId: number, slug:string){
+        const userToRemove = await this.getArticleBySlug(slug)
+        if (!userToRemove){
+            throw new HttpException('Article not found', HttpStatus.NOT_FOUND);
+        }
+
+        if (userToRemove.author.id !== userId) {
+        throw new HttpException('You are not the author', HttpStatus.FORBIDDEN);
+        }
+        // remove(entity) loads the entity and does trigger cascades, subscribers, and lifecycle hooks.
+        // this.articleRepository.delete({ slug }); delete(criteria) is faster and does not trigger subscribers/cascades.
+        return await this.articleRepository.remove(userToRemove)
+    }
 }
