@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Articles } from '@app/article/article.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@app/user/user.entity';
-import { CreateArticleDto } from './dto/article.dto';
+import { CreateArticleDto, UpdateArticleDto } from './dto/article.dto';
 import slugify from 'slugify';
 import { ArticleResponse } from '@app/types/articleresponse';
 import { NotFoundError } from 'rxjs';
@@ -44,5 +44,22 @@ export class ArticleService {
             throw new NotFoundException
         }
         return result
+    }
+    async updateArticle(id: number, slug:string, updateArticleDto: UpdateArticleDto){
+        const article = await this.getArticleBySlug(slug)
+
+        if (id !== article.author.id){
+            throw new HttpException("Unauthorized access", HttpStatus.UNAUTHORIZED)
+        }
+        if(!article){
+            throw new HttpException("No Article found", HttpStatus.NOT_FOUND)
+        }
+        if (updateArticleDto.title && updateArticleDto.title.trim().length){
+            article.slug = this.generateSlug(updateArticleDto.title)
+        }
+
+        Object.assign(article, updateArticleDto)
+        return this.articleRepository.save(article)
+
     }
 }
